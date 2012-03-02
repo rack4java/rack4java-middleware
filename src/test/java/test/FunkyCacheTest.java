@@ -21,7 +21,7 @@ public class FunkyCacheTest extends TestCase {
 	
 	public void setUp() {
 		stub = new StubRack()
-			.with(Rack.RESPONSE_BODY, new StringRackBody("hello"))
+			.with(Rack.MESSAGE_BODY, new StringRackBody("hello"))
 			.with(Rack.HTTP_CONTENT_TYPE, "text/html");
 		root = new File("output/funky-cache");
 		clear(root);
@@ -30,7 +30,9 @@ public class FunkyCacheTest extends TestCase {
 	}
 
 	private void clear(File root) {
-		for (File child : root.listFiles()) {
+		if (null == root) return;
+		File[] files = root.listFiles();
+		if (null != files && files.length > 0) for (File child : files) {
 			String name = child.getName();
 			if (name.equals(".") || name.equals("..")) continue;
 			if (child.isDirectory()) {
@@ -40,13 +42,26 @@ public class FunkyCacheTest extends TestCase {
 		}
 	}
 
-	private Context<String> call(String path) throws Exception {
+	protected Context<String> call(String method, String path, String query, String body) throws Exception {
 		return app.call(new MapContext<String>()
-				.with(Rack.REQUEST_METHOD, "GET")
+				.with(Rack.REQUEST_METHOD, method)
 				.with(Rack.SCRIPT_NAME, "stub")
 				.with(Rack.PATH_INFO, path)
-				.with(Rack.QUERY_STRING, "")
+				.with(Rack.QUERY_STRING, query)
+				.with(Rack.MESSAGE_BODY, new StringRackBody(body))
 			);
+	}
+
+	protected Context<String> get(String path) throws Exception {
+		return call("GET", path, "", "");
+	}
+
+	protected Context<String> get(String path, String query) throws Exception {
+		return call("GET", path, query, "");
+	}
+	
+	protected Context<String> post(String path, String body) throws Exception {
+		return call("POST", path, "", body);
 	}
 
 	private void createFile(String name) throws IOException {
@@ -58,31 +73,47 @@ public class FunkyCacheTest extends TestCase {
 	}
 	
 	
-	public void testFileAlreadyExists() throws Exception {
+	public void testServeFileIfItAlreadyExists() throws Exception {
 		createFile("ugh.html");
-		ret = call("ugh");
+		ret = get("ugh");
 		
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.RESPONSE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+	}
+	
+	public void testQueryBypassesCache() throws Exception {
+		createFile("ugh.html");
+		ret = get("ugh", "a=b");
+		
+		assertEquals(1, stub.called);
+		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+	}
+	
+	public void testPostBypassesCache() throws Exception {
+		createFile("ugh.html");
+		ret = post("ugh", "a=b");
+		
+		assertEquals(1, stub.called);
+		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testFileWithDefaultLeafAlreadyExists() throws Exception {
 		createFile("ugh/index.html");
-		ret = call("ugh/");
+		ret = get("ugh/");
 
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.RESPONSE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testFileCreatedAndUsedTheNextTime() throws Exception {
-		ret = call("ugh");
+		ret = get("ugh");
 		assertEquals(1, stub.called);
-		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.RESPONSE_BODY)).getType());
+		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
 		
 		stub.reset();
 
-		ret = call("ugh");
+		ret = get("ugh");
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.RESPONSE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 }

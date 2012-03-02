@@ -34,14 +34,11 @@ public class FunkyCache implements Rack {
 	}
 	
 	@Override public Context<String> call(Context<String> env) throws Exception {
-System.err.println("FC.call method=" + env.get(REQUEST_METHOD) + " path=[" + env.get(PATH_INFO) + "] q=[" + env.get(QUERY_STRING) + "]");
 		if (appropriateRequest(env)) {
 			File file = getFilePath(env);
-System.err.println("FC.call file=" + file + "(exists=" + file.exists() + ")");
 			if (file.exists()) {
-				env.with(Rack.RESPONSE_BODY, new FileRackBody(file));
+				env.with(Rack.MESSAGE_BODY, new FileRackBody(file));
 			} else {
-System.err.println("FC.call sbout to call app");
 				env = application.call(env);
 				if (appropriateResponse(env)) cache(env);
 			}
@@ -60,7 +57,6 @@ System.err.println("FC.call sbout to call app");
 	}
 
 	private void cache(Context<String> env) throws IOException {
-System.err.println("FC.cache");
 		File file = getFilePath(env);
 		FileOutputStream out = null;
 		try {
@@ -78,7 +74,7 @@ System.err.println("FC.cache");
 	}
 
 	private boolean appropriateResponse(Context<String> env) {
-		RackBody body = (RackBody) env.getObject(RESPONSE_BODY);
+		RackBody body = (RackBody) env.getObject(MESSAGE_BODY);
 
 		return
 			null != body &&
