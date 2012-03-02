@@ -2,15 +2,11 @@ h1. Rack4Java middleware
 
 h2. Introduction
 
-The original ruby rack implementation has been enhanced by lots of additional "middleware" - self-contained, re-usable chunks of web-application 
-functionality which can easily be composed into rich applications. As an extra bonus, many of the middleware implementations are open source, 
-and so can also be used to learn tips and techniques for creating or improving your own rack middleware.  
+The original ruby rack implementation has been enhanced by lots of additional "middleware" - self-contained, re-usable chunks of web-application functionality which can easily be composed into rich applications. As an extra bonus, many of the middleware implementations are open source, and so can also be used to learn tips and techniques for creating or improving your own rack middleware.  
 
 Rack4Java also supports the same kind of middleware but, being newer and less well-known, has not grown such a full set of resources.
 
-This project is an attempt to "jump start" such an ecosystem by providing Rack4java "clones" of a broad selection of middleware, 
-based on freely-available ruby rack code. There is no intention to claim ownership of the ideas here - each rack4Java middleware 
-links clearly to the code it was based on.
+This project is an attempt to "jump start" such an ecosystem by providing Rack4java "clones" of a broad selection of middleware, based on freely-available ruby rack code. There is no intention to claim ownership of the ideas here - each rack4Java middleware links clearly to the code it was based on.
 
 h2. Midleware implementations in this project are as follows:
 
