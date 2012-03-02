@@ -15,4 +15,4 @@ links clearly to the code it was based on.
 h2. Midleware implementations in this project are as follows:
 
 |_. Rack4Java middleware class(es) |_. Based on |
-| src/main/java/org/rack4java/middleware/funky_cache/FunkyCache.java | https://github.com/tuupola/rack-funky-cache |
+| "FunkyCache.java":src/main/java/org/rack4java/middleware/funky_cache/FunkyCache.java | "/github.com/tuupola/rack-funky-cache":https://github.com/tuupola/rack-funky-cache |
