@@ -8,7 +8,8 @@ Rack4Java also supports the same kind of middleware but, being newer and less we
 
 This project is an attempt to "jump start" such an ecosystem by providing Rack4java "clones" of a broad selection of middleware, based on freely-available ruby rack code. There is no intention to claim ownership of the ideas here - each rack4Java middleware links clearly to the code it was based on.
 
-h2. Midleware implementations in this project are as follows:
+h2. Middleware implementations in this project are as follows:
 
 |_. Rack4Java middleware class(es) |_. Based on |
 | "FunkyCache.java":https://github.com/rack4java/rack4java-middleware/blob/master/src/main/java/org/rack4java/middleware/funky_cache/FunkyCache.java | "github.com/tuupola/rack-funky-cache":https://github.com/tuupola/rack-funky-cache |
+| "NaughtyStep.java":https://github.com/rack4java/rack4java-middleware/blob/master/src/main/java/org/rack4java/middleware/naughty_step/NaughtyStep.java | "github.com/mig-hub/naughty_step":https://github.com/mig-hub/naughty_step/blob/master/naughty_step.rb |

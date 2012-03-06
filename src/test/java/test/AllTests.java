@@ -9,6 +9,7 @@ public class AllTests extends TestCase {
         TestSuite ret = new TestSuite();
 
         ret.addTestSuite(FunkyCacheTest.class);
+        ret.addTestSuite(NaughtyStepTest.class);
 
         return ret;
     }

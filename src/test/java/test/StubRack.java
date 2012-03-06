@@ -25,6 +25,13 @@ public class StubRack implements Rack {
 		return this;
 	}
 	
+	public StubRack with(Context<String> context) {
+		for (Map.Entry<String, Object> entry : context) {
+			canned.with(entry.getKey(), entry.getValue());
+		}
+		return this;
+	}
+	
 	public Object remove(String key) {
 		return canned.remove(key);
 	}
