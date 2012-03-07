@@ -16,7 +16,8 @@ import org.rack4java.context.MapContext;
 public abstract class MiddlewareTestCase extends TestCase {
 	protected ByteArrayOutputStream errors;
 	protected StubRack stub;
-	protected Context<String> ret;
+	protected Context<String> request;
+	protected Context<String> response;
 	protected Rack app;
 	protected File root;
 	
@@ -30,9 +31,11 @@ public abstract class MiddlewareTestCase extends TestCase {
 	public void setUp(String name) {
 		root = new File("output/" + name);
 		clear(root);
+		
+		request = new MapContext<String>()
+			.with(commonEnvironment);
 
 		stub = new StubRack()
-			.with(commonEnvironment)
 			.with(Rack.MESSAGE_STATUS, 200)
 			.with(Rack.MESSAGE_BODY, new StringRackBody("hello"))
 			.with(Rack.HTTP_CONTENT_TYPE, "text/html");
@@ -53,14 +56,14 @@ public abstract class MiddlewareTestCase extends TestCase {
 
 	protected Context<String> call(String method, String path, String query, String body)
 			throws Exception {
-				ret = app.call(new MapContext<String>()
+				response = app.call(request
 						.with(Rack.REQUEST_METHOD, method)
 						.with(Rack.SCRIPT_NAME, "stub")
 						.with(Rack.PATH_INFO, path)
 						.with(Rack.QUERY_STRING, query)
 						.with(Rack.MESSAGE_BODY, new StringRackBody(body))
 					);
-				return ret;
+				return response;
 			}
 
 	protected Context<String> get(String path) throws Exception {

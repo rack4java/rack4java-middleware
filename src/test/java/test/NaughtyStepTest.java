@@ -17,16 +17,16 @@ public class NaughtyStepTest extends MiddlewareTestCase {
 	public void testNormalResponse() throws Exception {
 		get("/whatever");
 		assertEquals(1, stub.called);
-		assertEquals(200, ret.getObject(Rack.MESSAGE_STATUS));
-		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(200, response.getObject(Rack.MESSAGE_STATUS));
+		assertEquals(RackBody.Type.literal, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testMissingResource() throws Exception {
 		stub.with(Rack.MESSAGE_STATUS, 404);
 		get("/whatever");
 		assertEquals(1, stub.called);
-		assertEquals(404, ret.getObject(Rack.MESSAGE_STATUS));
-		RackBody body = (RackBody)ret.getObject(Rack.MESSAGE_BODY);
+		assertEquals(404, response.getObject(Rack.MESSAGE_STATUS));
+		RackBody body = (RackBody)response.getObject(Rack.MESSAGE_BODY);
 		assertEquals(RackBody.Type.file, body.getType());
 		assertEquals("404.html", body.getBodyAsFile().getName());
 	}
@@ -35,8 +35,8 @@ public class NaughtyStepTest extends MiddlewareTestCase {
 		stub.remove(Rack.MESSAGE_STATUS);
 		get("/whatever");
 		assertEquals(1, stub.called);
-		assertEquals(500, ret.getObject(Rack.MESSAGE_STATUS));
-		RackBody body = (RackBody)ret.getObject(Rack.MESSAGE_BODY);
+		assertEquals(500, response.getObject(Rack.MESSAGE_STATUS));
+		RackBody body = (RackBody)response.getObject(Rack.MESSAGE_BODY);
 		assertEquals(RackBody.Type.file, body.getType());
 		assertEquals("500.html", body.getBodyAsFile().getName());
 		assertTrue(errors.toString().contains("java.lang.NullPointerException"));

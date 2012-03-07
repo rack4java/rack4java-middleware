@@ -18,7 +18,7 @@ public class FunkyCacheTest extends MiddlewareTestCase {
 		get("ugh");
 		
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testQueryBypassesCache() throws Exception {
@@ -26,7 +26,7 @@ public class FunkyCacheTest extends MiddlewareTestCase {
 		get("ugh", "a=b");
 		
 		assertEquals(1, stub.called);
-		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.literal, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testPostBypassesCache() throws Exception {
@@ -34,7 +34,7 @@ public class FunkyCacheTest extends MiddlewareTestCase {
 		post("ugh", "a=b");
 		
 		assertEquals(1, stub.called);
-		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.literal, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testFileWithDefaultLeafAlreadyExists() throws Exception {
@@ -42,18 +42,18 @@ public class FunkyCacheTest extends MiddlewareTestCase {
 		get("ugh/");
 
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 	
 	public void testFileCreatedAndUsedTheNextTime() throws Exception {
 		get("ugh");
 		assertEquals(1, stub.called);
-		assertEquals(RackBody.Type.literal, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.literal, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 		
 		stub.reset();
 
 		get("ugh");
 		assertEquals(0, stub.called);
-		assertEquals(RackBody.Type.file, ((RackBody)ret.getObject(Rack.MESSAGE_BODY)).getType());
+		assertEquals(RackBody.Type.file, ((RackBody)response.getObject(Rack.MESSAGE_BODY)).getType());
 	}
 }

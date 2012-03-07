@@ -40,7 +40,7 @@ public class FunkyCache implements Rack {
 				env.with(Rack.MESSAGE_BODY, new FileRackBody(file));
 			} else {
 				env = application.call(env);
-				if (appropriateResponse(env)) cache(env);
+				if (appropriateResponse(env)) cache(env, file);
 			}
 		} else {
 			env = application.call(env);
@@ -56,8 +56,7 @@ public class FunkyCache implements Rack {
 		return new File(root, path);
 	}
 
-	private void cache(Context<String> env) throws IOException {
-		File file = getFilePath(env);
+	private void cache(Context<String> env, File file) throws IOException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
@@ -78,7 +77,7 @@ public class FunkyCache implements Rack {
 
 		return
 			null != body &&
-			body.getType()!= RackBody.Type.file && 
+			body.getType() != RackBody.Type.file && 
 			env.get(HTTP_CONTENT_TYPE).startsWith("text/html");
 	}
 

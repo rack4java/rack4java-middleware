@@ -1,18 +1,17 @@
 package test;
 
-import java.util.Map;
-
 import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.context.MapContext;
 
 public class StubRack implements Rack {
 	
-	public Context<String> canned;
+	public Context<String> request;
+	public MapContext<String> response;
 	public int called;
 	
 	public StubRack(Context<String> canned) {
-		this.canned = canned;
+		this.response = new MapContext<String>().with(canned);
 		reset();
 	}
 	
@@ -21,31 +20,28 @@ public class StubRack implements Rack {
 	}
 	
 	public StubRack with(String key, Object value) {
-		canned.with(key, value);
+		response.with(key, value);
 		return this;
 	}
 	
 	public StubRack with(Context<String> context) {
-		for (Map.Entry<String, Object> entry : context) {
-			canned.with(entry.getKey(), entry.getValue());
-		}
+		response.with(context);
 		return this;
 	}
 	
 	public Object remove(String key) {
-		return canned.remove(key);
+		return response.remove(key);
 	}
 	
 	public void reset() {
 		called = 0;
+		request = null;
 	}
 
 	@Override public Context<String> call(Context<String> environment) throws Exception {
-		for (Map.Entry<String, Object> entry : canned) {
-			environment.with(entry.getKey(), entry.getValue());
-		}
+		this.request = environment;
 		++called;
-		return environment;
+		return response;
 	}
 
 }
