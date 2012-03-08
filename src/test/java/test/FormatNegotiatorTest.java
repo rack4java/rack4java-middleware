@@ -16,4 +16,18 @@ public class FormatNegotiatorTest extends MiddlewareTestCase {
 		assertEquals(1, stub.called);
 		assertEquals("application/octet-stream", stub.request.get(Rack.HTTP_ACCEPT));
 	}
+
+	public void testClientHasOnlyOneOptionAppDoesntCare() throws Exception {
+		request.with(Rack.HTTP_ACCEPT, "application/json");
+		get("/lala");
+		assertEquals(1, stub.called);
+		assertEquals("application/json", stub.request.get(Rack.HTTP_ACCEPT));
+	}
+
+	public void testClientHasSequenceAppDoesntCare() throws Exception {
+		request.with(Rack.HTTP_ACCEPT, "application/json,application/xml");
+		get("/lala");
+		assertEquals(1, stub.called);
+		assertEquals("application/json", stub.request.get(Rack.HTTP_ACCEPT));
+	}
 }

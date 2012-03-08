@@ -14,9 +14,20 @@ public class FormatNegotiator implements Rack {
 	}
 
 	@Override public Context<String> call(Context<String> environment) throws Exception {
-		if (StringUtils.isBlank(environment.get(HTTP_ACCEPT))) environment.with(Rack.HTTP_ACCEPT, Mime.DEFAULT_MIME_TYPE);
-		
+		negotiate(environment);
 		return application.call(environment);
+	}
+
+	private void negotiate(Context<String> environment) {
+		String accept = environment.get(HTTP_ACCEPT);
+		String preferred = null;
+		if (null != accept) {
+			String[] options = accept.split(",");
+			preferred = options[0];
+		}
+		if (StringUtils.isBlank(preferred)) preferred = Mime.DEFAULT_MIME_TYPE;
+		
+		environment.with(Rack.HTTP_ACCEPT, preferred);
 	}
 
 }
