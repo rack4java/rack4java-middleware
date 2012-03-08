@@ -30,4 +30,18 @@ public class FormatNegotiatorTest extends MiddlewareTestCase {
 		assertEquals(1, stub.called);
 		assertEquals("application/json", stub.request.get(Rack.HTTP_ACCEPT));
 	}
+
+	public void testClientHasSequenceWithPrioritiesAppDoesntCare() throws Exception {
+		request.with(Rack.HTTP_ACCEPT, "application/json;q=0.6,application/xml;q=0.9");
+		get("/lala");
+		assertEquals(1, stub.called);
+		assertEquals("application/xml", stub.request.get(Rack.HTTP_ACCEPT));
+	}
+
+	public void testClientHasSequenceWithPartialPrioritiesAppDoesntCare() throws Exception {
+		request.with(Rack.HTTP_ACCEPT, "application/json;q=0.6,text/html,application/xml;q=0.9");
+		get("/lala");
+		assertEquals(1, stub.called);
+		assertEquals("text/html", stub.request.get(Rack.HTTP_ACCEPT));
+	}
 }
