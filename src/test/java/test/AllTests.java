@@ -11,6 +11,7 @@ public class AllTests extends TestCase {
         ret.addTestSuite(FunkyCacheTest.class);
         ret.addTestSuite(NaughtyStepTest.class);
         ret.addTestSuite(AbstractFormatTest.class);
+        ret.addTestSuite(FormatNegotiatorTest.class);
 
         return ret;
     }
