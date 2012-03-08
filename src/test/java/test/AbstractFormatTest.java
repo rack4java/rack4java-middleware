@@ -1,7 +1,7 @@
 package test;
 
 import org.rack4java.Rack;
-import org.rack4java.middleware.AbstractFormat;
+import org.rack4java.middleware.abstract_format.AbstractFormat;
 
 public class AbstractFormatTest extends MiddlewareTestCase {
 	public void setUp() {

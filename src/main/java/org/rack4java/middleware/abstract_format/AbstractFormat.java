@@ -1,4 +1,4 @@
-package org.rack4java.middleware;
+package org.rack4java.middleware.abstract_format;
 
 import org.rack4java.Context;
 import org.rack4java.Rack;
