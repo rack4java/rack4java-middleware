@@ -65,16 +65,26 @@ public class FormatNegotiator implements Rack {
 
 	private String select(List<Map.Entry<String, Double>> requestedFormats, List<Map.Entry<String, Double>> supportedFormats) {
 		for (Map.Entry<String, Double> requested : requestedFormats) {
-			String type = requested.getKey();
-			if (supportedFormats.isEmpty()) return type;
+			String requestedType = requested.getKey();
+			if (supportedFormats.isEmpty()) return requestedType;
 			
 			for (Map.Entry<String, Double> supported : supportedFormats) {
-				if (type.equals(supported.getKey())) {
-					return type;
+				String supportedType = supported.getKey();
+				if (match(requestedType, supportedType)) {
+					return supportedType;
 				}
 			}
 		}
 		return Mime.DEFAULT_MIME_TYPE;
+	}
+
+	private boolean match(String requestedType, String supportedType) {
+		if (requestedType.endsWith("*")) {
+			String[] requested = requestedType.split("/");
+			String[] supported = supportedType.split("/");
+			return requested[0].equals(supported[0]);
+		}
+		return requestedType.equals(supportedType);
 	}
 
 	public FormatNegotiator withSupportedFormat(String format, double q) {

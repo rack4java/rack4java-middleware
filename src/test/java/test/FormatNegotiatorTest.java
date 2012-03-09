@@ -68,4 +68,12 @@ public class FormatNegotiatorTest extends MiddlewareTestCase {
 		assertEquals(1, stub.called);
 		assertEquals("application/xml", stub.request.get(Rack.HTTP_ACCEPT));
 	}
+
+	public void testClientHasWildcardAppHasSequence() throws Exception {
+		((FormatNegotiator)app).withSupportedFormat("application/xml").withSupportedFormat("text/html").withSupportedFormat("text/plain");
+		request.with(Rack.HTTP_ACCEPT, "application/json,text/*");
+		get("/lala");
+		assertEquals(1, stub.called);
+		assertEquals("text/html", stub.request.get(Rack.HTTP_ACCEPT));
+	}
 }
