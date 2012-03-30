@@ -79,10 +79,9 @@ public class FormatNegotiator implements Rack {
 	}
 
 	private boolean match(String requestedType, String supportedType) {
-		if (requestedType.endsWith("*")) {
-			String[] requested = requestedType.split("/");
-			String[] supported = supportedType.split("/");
-			return requested[0].equals(supported[0]);
+		if (requestedType.contains("*")) {
+			String requestedRegex = requestedType.replaceAll("\\*", "\\.\\*");
+			return supportedType.matches(requestedRegex);
 		}
 		return requestedType.equals(supportedType);
 	}
